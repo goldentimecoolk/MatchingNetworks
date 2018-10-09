@@ -27,12 +27,19 @@ class DistanceNetwork(nn.Module):
         eps = 1e-10
         similarities = []
         for support_image in support_set:
+            ### support_image shape [batch_size, 64]
             sum_support = torch.sum(torch.pow(support_image, 2), 1)
+            ### sum_support shape [batch_size]
             support_magnitude = sum_support.clamp(eps, float("inf")).rsqrt()
+            ### .rsqrt() -> return the reciprocal of the square-root of each of the elements of input.
+            ### support_magnitude shape [batch_size]
             dot_product = input_image.unsqueeze(1).bmm(support_image.unsqueeze(2)).squeeze()
+            ### [batch_size, 64] -> [batch_size, 1, 64] * [batch_size, 64, 1] -> [batch_size, 1] -> [batch_size]
             cosine_similarity = dot_product * support_magnitude
+            ### [batch_size] * [batch_size] = [batch_size]
             similarities.append(cosine_similarity)
         similarities = torch.stack(similarities)
+        ### [sequence_length, batch_size]
         return similarities
 
 class DistanceNetworkTest(unittest.TestCase):
