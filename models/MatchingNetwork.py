@@ -64,9 +64,9 @@ class MatchingNetwork(nn.Module):
         # produce embeddings for support set images
         encoded_images = []
         for i in np.arange(support_set_images.size(1)):
-            gen_encode = self.g(support_set_images[:,i,:,:,:])
-            encoded_images.append(gen_encode)
-
+            gen_encode = self.g(support_set_images[:,i,:,:,:])             ### distill features from images, embedding.
+            encoded_images.append(gen_encode)                              ### [sequence_size, batch_size, 64]
+            
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
             gen_encode = self.g(target_image[:,i,:,:,:])
