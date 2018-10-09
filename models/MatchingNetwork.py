@@ -85,7 +85,7 @@ class MatchingNetwork(nn.Module):
             ### [sequence_length, batch_size, 64] && [batch_size, 64] -> [sequence_length, batch_size]
             similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
             similarities = similarities.t()
-            ### this transposition is very important
+            ### this transposition is very important and beautiful!
 
             # produce predictions for target probabilities
             ### preds: [sequence_length, num_classes]
@@ -102,6 +102,7 @@ class MatchingNetwork(nn.Module):
 
             # delete the last target image encoding of encoded_images
             encoded_images.pop()
+            ### this pop is very important and beautiful!
 
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1)
 
