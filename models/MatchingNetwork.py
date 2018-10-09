@@ -26,11 +26,13 @@ class MatchingNetwork(nn.Module):
 
         """
         Builds a matching network, the training and evaluation ops as well as data augmentation routines.
-        :param keep_prob: A tf placeholder of type tf.float32 denotes the amount of dropout to be used
-        :param batch_size: The batch size for the experiment
+        ###### the followings are about data augmentation. ######
         :param num_channels: Number of channels of the images
         :param is_training: Flag indicating whether we are training or evaluating
         :param rotate_flag: Flag indicating whether to rotate the images
+        ###### the followings are about training setting. ######
+        :param keep_prob: A tf placeholder of type tf.float32 denotes the amount of dropout to be used
+        :param batch_size: The batch size for the experiment
         :param fce: Flag indicating whether to use full context embeddings (i.e. apply an LSTM on the CNN embeddings)
         :param num_classes_per_set: Integer indicating the number of classes per set
         :param num_samples_per_class: Integer indicating the number of samples per class
