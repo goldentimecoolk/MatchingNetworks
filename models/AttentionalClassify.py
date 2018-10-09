@@ -27,6 +27,9 @@ class AttentionalClassify(nn.Module):
         softmax = nn.Softmax()
         softmax_similarities = softmax(similarities)
         preds = softmax_similarities.unsqueeze(1).bmm(support_set_y).squeeze()
+        ### softmax_similarities.unsqueeze(1) -> [sequence_length, 1, batch_size]
+        ### .bmm(support_set_y) -> [sequence_length, 1, num_classes]
+        ### .squeeze() -> [sequence_length, num_classes]
         return preds
 
 class AttentionalClassifyTest(unittest.TestCase):
