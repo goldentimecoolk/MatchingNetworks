@@ -30,6 +30,7 @@ class DistanceNetwork(nn.Module):
             ### support_image shape [batch_size, 64]
             sum_support = torch.sum(torch.pow(support_image, 2), 1)
             ### sum_support shape [batch_size] (64-dim features shrink into one point per sample, totally batch_size)
+            ### DOUBT: directly add them together along feature dim, will this lose info?
             support_magnitude = sum_support.clamp(eps, float("inf")).rsqrt()
             ### .rsqrt() -> return the reciprocal of the square-root of each of the elements of input.
             ### support_magnitude shape [batch_size]
