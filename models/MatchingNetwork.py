@@ -64,23 +64,31 @@ class MatchingNetwork(nn.Module):
         # produce embeddings for support set images
         encoded_images = []
         for i in np.arange(support_set_images.size(1)):
-            gen_encode = self.g(support_set_images[:,i,:,:,:])             ### distill features from images, embedding.
+            ### [batch_size, 28, 28, 1] -> [batch_size, 64]
+            gen_encode = self.g(support_set_images[:,i,:,:,:])             ### embedding features from images.
             encoded_images.append(gen_encode)                              ### [sequence_size, batch_size, 64]
             
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
-            gen_encode = self.g(target_image[:,i,:,:,:])
-            encoded_images.append(gen_encode)
-            outputs = torch.stack(encoded_images)
+            gen_encode = self.g(target_image[:,i,:,:,:])                   ### DOUBT the target_image shape. ###
+            encoded_images.append(gen_encode)                              ### [sequence_size+1, batch_size, 64]
+            outputs = torch.stack(encoded_images)                          ### 'concat' support_set_images and single target_image together.
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
-
+            ### outputs: (seq_len, batch, num_directions * hidden_size)
+            ### here it is (seq_len+1, batch, num_directions * hidden_size)
+            
             # get similarity between support set embeddings and target
+            ### seperate support_set [seq_len, batch_size, num_directions * hidden_size]
+            ### and input_image [batch_size, num_directions * hidden_size] from outputs.
+            ### [sequence_length, batch_size, 64] && [batch_size, 64] -> [sequence_length, batch_size]
             similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
             similarities = similarities.t()
+            ### this transposition is very important
 
             # produce predictions for target probabilities
+            ### preds: [sequence_length, num_classes]
             preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
 
             # calculate accuracy and crossentropy loss
