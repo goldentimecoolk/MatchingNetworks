@@ -11,6 +11,7 @@
 import torch.nn as nn
 import unittest
 
+### based on DistanceNetwork, whose output [sequence_length, num_classes]
 class AttentionalClassify(nn.Module):
     def __init__(self):
         super(AttentionalClassify, self).__init__()
