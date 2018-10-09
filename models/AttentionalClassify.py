@@ -11,7 +11,7 @@
 import torch.nn as nn
 import unittest
 
-### based on DistanceNetwork, whose output [sequence_length, num_classes]
+### based on DistanceNetwork, whose output is cosine similarities [sequence_length, batch_size]
 class AttentionalClassify(nn.Module):
     def __init__(self):
         super(AttentionalClassify, self).__init__()
@@ -26,10 +26,12 @@ class AttentionalClassify(nn.Module):
         :return: Softmax pdf
         """
         softmax = nn.Softmax()
-        softmax_similarities = softmax(similarities)
+        softmax_similarities = softmax(similarities)                           
+        ### softmax along the 2nd dim, batch_size. e.g. softmax(torch.ones(3,4)) = 0.25*torch.ones(3,4)
         preds = softmax_similarities.unsqueeze(1).bmm(support_set_y).squeeze()
         ### softmax_similarities.unsqueeze(1) -> [sequence_length, 1, batch_size]
-        ### .bmm(support_set_y) -> [sequence_length, 1, num_classes]
+        ### .bmm(support_set_y) -> [sequence_length, 1, num_classes]      
+        ### this indicates that the pred is linear combination of yi in support set. (eq.1)
         ### .squeeze() -> [sequence_length, num_classes]
         return preds
 
