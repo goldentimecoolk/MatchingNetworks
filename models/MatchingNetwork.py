@@ -72,7 +72,7 @@ class MatchingNetwork(nn.Module):
         for i in np.arange(target_image.size(1)):
             gen_encode = self.g(target_image[:,i,:,:,:])                   ### DOUBT the target_image shape. ###
             encoded_images.append(gen_encode)                              ### [sequence_size+1, batch_size, 64]
-            outputs = torch.stack(encoded_images)                          ### 'concat' support_set_images and single target_image together.
+            outputs = torch.stack(encoded_images)                          ### 'concat' support_set_images and current single target_image together.
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
