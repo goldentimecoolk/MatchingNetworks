@@ -85,7 +85,8 @@ class MatchingNetwork(nn.Module):
             ### [sequence_length, batch_size, 64] && [batch_size, 64] -> [sequence_length, batch_size]
             similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
             similarities = similarities.t()
-            ### this transposition is very important and beautiful!
+            ### [batch_size, sequence_length]
+            ### this transposition is very important!
 
             # produce predictions for target probabilities
             ### preds: [sequence_length, num_classes]
