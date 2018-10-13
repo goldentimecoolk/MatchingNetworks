@@ -40,6 +40,7 @@ class DistanceNetwork(nn.Module):
             ### [batch_size] * [batch_size] = [batch_size]
             similarities.append(cosine_similarity)
         similarities = torch.stack(similarities)
+        ### DOUBT the shape of returned tensor
         ### [sequence_length, batch_size]
         return similarities
 
